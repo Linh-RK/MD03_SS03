@@ -96,13 +96,17 @@ insert into ChiTietDonHang(maVT,soDH) values
 (1,4),
 (2,5);
 
--- Tìm danh sách vật tư bán chạy nhất
-SELECT maVT, COUNT(maVT) AS sales
-FROM ChiTietDonHang
-GROUP BY maVT
-ORDER BY sales DESC
-LIMIT 1;
+SELECT vt.*, sum(pxct.soLuongXuat)AS qty 
+from MaVatTu vt
+join PhieuXuatChiTiet pxct on pxct.maVT = vt.maVT
+GROUP BY vt.maVT
+ORDER BY qty DESC
+;
 -- Tìm danh sách vật tư có trong kho nhiều nhất
+select vt.*, sum(pnct.soLuongNhap) - sum(pxct.soLuongXuat) as 'ton kho' from MaVatTu vt
+join PhieuNhapChiTiet pnct on vt.maVT= pnct.maVT
+join PhieuXuatChiTiet pxct on vt.maVT= pxct.maVT
+group by vt.maVT;
 
 -- Tìm ra danh sách nhà cung cấp có đơn hàng từ ngày 12/2/2024 đến 22/2/2024
 SELECT tenNCC, diaChi, soDienThoai
